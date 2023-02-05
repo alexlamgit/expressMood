@@ -25,8 +25,9 @@ router.post("/", async function (req, res) {
   console.log(completionTextArray);
 
   res.render("dashboard.html", {
-    happinessEmoji: completionTextArray[0],
-    happinessLevel: completionTextArray[1],
+    //remove all spaces from the string
+    happinessEmoji: completionTextArray[0].replace(/\s/g, ""),
+    happinessLevel: completionTextArray[1].replace(/\s/g, ""),
     greeting: completionTextArray[2],
   });
 });
