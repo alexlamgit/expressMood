@@ -13,14 +13,12 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  let room = socket.on("join", (room) => {
+  socket.on("join", (room) => {
     socket.join(room);
   });
   socket.on("chat message", (msg) => {
     let room = msg["room"];
     let message = msg["message"];
-    console.log(room);
-    console.log(message);
     io.to(room).emit("chat message", message);
   });
 });
