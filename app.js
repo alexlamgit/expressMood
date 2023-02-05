@@ -8,6 +8,28 @@ var dotenv = require("dotenv").config();
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var dashboardRouter = require("./routes/dashboard");
+var sqlite3 = require("sqlite3").verbose();
+
+const db = new sqlite3.Database("database.sqlite");
+
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS mood_data (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      emoji TEXT NOT NULL,
+      meter REAL NOT NULL,
+      volume REAL NOT NULL
+    )
+  `);
+  // const stmt = db.prepare(
+  //   "INSERT INTO table_name (emoji, meter, volume) VALUES (?, ?, ?)"
+  // );
+  // stmt.run(["some string", 100, 1]);
+  // stmt.run(["another string", 200, 1]);
+  // stmt.finalize();
+
+  db.close();
+});
 
 var app = express();
 

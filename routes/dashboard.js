@@ -1,12 +1,59 @@
 var express = require("express");
 var router = express.Router();
 const { Configuration, OpenAIApi } = require("openai");
+const sqlite3 = require("sqlite3").verbose();
 
 // Create a new OpenAI API client
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
+
+function checkStringInDB(dbPath, string, callback) {
+  const db = new sqlite3.Database(dbPath);
+  db.serialize(() => {
+    db.get(`SELECT * FROM mood_data WHERE emoji = ?`, [string], (err, row) => {
+      if (err) {
+        return console.error(err.message);
+      } else if (callback) {
+        db.close();
+        callback(row);
+      }
+    });
+  });
+}
+
+function insertStringInDB(dbPath, string, meter) {
+  const db = new sqlite3.Database(dbPath);
+  db.serialize(() => {
+    db.run(
+      `INSERT INTO mood_data (emoji, meter, volume) VALUES (?, ?, ?)`,
+      [string, meter, 1],
+      (err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+      }
+    );
+  });
+  db.close();
+}
+
+function incrementVolumeInDB(dbPath, string) {
+  const db = new sqlite3.Database(dbPath);
+  db.serialize(() => {
+    db.run(
+      `UPDATE mood_data SET volume = volume + 1 WHERE emoji = ?`,
+      [string],
+      (err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+      }
+    );
+  });
+  db.close();
+}
 
 /* GET dashboard page. */
 router.post("/", async function (req, res) {
@@ -21,14 +68,25 @@ router.post("/", async function (req, res) {
   });
   let completionText = completion.data.choices[0].text;
   let completionTextArray = completionText.split("|");
+  let emoji = completionTextArray[0].replace(/\s/g, "");
+  let happiness = completionTextArray[1].replace(/\s/g, "");
+  let quote = completionTextArray[2];
 
-  console.log(completionTextArray);
+  checkStringInDB("database.sqlite", emoji, function (row) {
+    if (row != undefined) {
+      console.log("String already exists in database\n");
+      incrementVolumeInDB("database.sqlite", emoji);
+    } else {
+      console.log("String does not exist in database\n");
+      insertStringInDB("database.sqlite", emoji, happiness);
+    }
+  });
 
   res.render("dashboard.html", {
     //remove all spaces from the string
-    happinessEmoji: completionTextArray[0].replace(/\s/g, ""),
-    happinessLevel: completionTextArray[1].replace(/\s/g, ""),
-    greeting: completionTextArray[2],
+    happinessEmoji: emoji,
+    happinessLevel: happiness,
+    greeting: quote,
   });
 });
 
