@@ -39,6 +39,7 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS mood_data (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       emoji TEXT NOT NULL,
+      emotion TEXT NOT NULL,
       meter REAL NOT NULL,
       volume REAL NOT NULL
     )

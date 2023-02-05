@@ -23,12 +23,12 @@ function checkStringInDB(dbPath, string, callback) {
   });
 }
 
-function insertStringInDB(dbPath, string, meter) {
+function insertStringInDB(dbPath, emoji, emotion, meter) {
   const db = new sqlite3.Database(dbPath);
   db.serialize(() => {
     db.run(
-      `INSERT INTO mood_data (emoji, meter, volume) VALUES (?, ?, ?)`,
-      [string, meter, 1],
+      `INSERT INTO mood_data (emoji, emotion, meter, volume) VALUES (?, ?, ?, ?)`,
+      [emoji, emotion, meter, 1],
       (err) => {
         if (err) {
           return console.error(err.message);
@@ -64,13 +64,15 @@ router.post("/", async function (req, res) {
     model: "text-davinci-003",
     temperature: 0.8,
     max_tokens: 32,
-    prompt: `The answer will contain three elements seperated by a pipe operator. The first elelment will convert the sentence to a unicode emoji. The second element will be a numerical value representing happinness level on a scale of 0 to 100 inclusively. The third element will be a customized quote 5 to 10 words long. Sentence: ${data}`,
+    prompt: `The answer will contain four elements seperated by a pipe operator. The first elelment will convert the sentence to a unicode emoji. The second element will be the main emtion conveyed in the text. The third element will be a numerical value representing happinness level on a scale of 0 to 100 inclusively. The fourth element will be a customized quote 5 to 10 words long. Sentence: ${data}`,
   });
   let completionText = completion.data.choices[0].text;
   let completionTextArray = completionText.split("|");
+  console.log(completionTextArray);
   let emoji = completionTextArray[0].replace(/\s/g, "");
-  let happiness = completionTextArray[1].replace(/\s/g, "");
-  let quote = completionTextArray[2];
+  let emotion = completionTextArray[1].replace(/\s/g, "");
+  let happiness = completionTextArray[2].replace(/\s/g, "");
+  let quote = completionTextArray[3];
 
   checkStringInDB("database.sqlite", emoji, function (row) {
     if (row != undefined) {
@@ -78,13 +80,14 @@ router.post("/", async function (req, res) {
       incrementVolumeInDB("database.sqlite", emoji);
     } else {
       console.log("String does not exist in database\n");
-      insertStringInDB("database.sqlite", emoji, happiness);
+      insertStringInDB("database.sqlite", emoji, emotion, happiness);
     }
   });
 
   res.render("dashboard.html", {
     //remove all spaces from the string
     happinessEmoji: emoji,
+    emotion: emotion,
     happinessLevel: happiness,
     greeting: quote,
   });
