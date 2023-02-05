@@ -50,5 +50,5 @@ body {
   padding: 0.5rem 1rem;
 }
 #messages > li:nth-child(odd) {
-  background: #00ff5e58;
+  background: #00ac3f45;
 }
