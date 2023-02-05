@@ -9,12 +9,26 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 /* GET dashboard page. */
-router.post("/", function (req, res) {
+router.post("/", async function (req, res) {
   //Set the data variable to the POST request as a string
   data = JSON.stringify(req.body.moodString);
   // Get the index.jade file from the views folder
-  console.log("POST request");
-  res.render("dashboard.html", { data: data });
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    temperature: 0.8,
+    max_tokens: 32,
+    prompt: `The answer will contain three elements seperated by a pipe operator. The first elelment will convert the sentence to a unicode emoji. The second element will be a numerical value representing happinness level on a scale of 0 to 100 inclusively. The third element will be a customized quote 5 to 10 words long. Sentence: ${data}`,
+  });
+  let completionText = completion.data.choices[0].text;
+  let completionTextArray = completionText.split("|");
+
+  console.log(completionTextArray);
+
+  res.render("dashboard.html", {
+    happinessEmoji: completionTextArray[0],
+    happinessLevel: completionTextArray[1],
+    greeting: completionTextArray[2],
+  });
 });
 
 router.get("/", function (req, res, next) {
