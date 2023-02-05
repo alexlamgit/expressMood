@@ -13,13 +13,19 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  socket.on("join", (room) => {
+  socket.on("join", (clientInfo) => {
+    console.log(clientInfo);
+    let room = clientInfo["room"];
+    socket.user = clientInfo["user"];
     socket.join(room);
   });
   socket.on("chat message", (msg) => {
     let room = msg["room"];
     let message = msg["message"];
-    io.to(room).emit("chat message", message);
+    io.to(room).emit(
+      "chat message",
+      `USER[${socket.id.slice(0, 6)}]:   ${message}`
+    );
   });
 });
 

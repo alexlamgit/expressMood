@@ -17,10 +17,19 @@
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      //Creates a string username composed of a random 6 digit number
+      var username = "User" + Math.floor(Math.random() * 1000000).toString();
+
       var socket = io();
 
+      //Create a clientInfo json object that contains the room and the username
+      var clientInfo = {
+        room: "{{emotion}}",
+        username: username,
+      };
+
       socket.on("connect", function () {
-        socket.emit("join", "{{emotion}}");
+        socket.emit("join", clientInfo);
       });
 
       socket.on("chat message", function (msg) {
@@ -38,7 +47,7 @@
         if (input.value) {
           // Create a new messageJson object
           var messageJson = {
-            room: "{{emoji}}",
+            room: "{{emotion}}",
             message: input.value,
           };
           socket.emit("chat message", messageJson);
