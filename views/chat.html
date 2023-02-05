@@ -1,55 +1,41 @@
-<h1>Real Time Messaging</h1>
-<pre id="messages" style="height: 400px; overflow: scroll"></pre>
-<input
-  type="text"
-  id="messageBox"
-  placeholder="Type your message here"
-  style="display: block; width: 100%; margin-bottom: 10px; padding: 10px"
-/>
-<button id="send" title="Send Message!" style="width: 100%; height: 30px">
-  Send Message
-</button>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/style-chat.css" />
+    <title>{{emoji}}</title>
+  </head>
+  <body>
+    <h1>The {{emoji}} Messaging Room</h1>
+    <body>
+      <ul id="messages"></ul>
+      <form id="form">
+        <input id="input" autocomplete="off" /><button>Send</button>
+      </form>
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
 
-<script>
-  (function () {
-    const sendBtn = document.querySelector("#send");
-    const messages = document.querySelector("#messages");
-    const messageBox = document.querySelector("#messageBox");
+      socket.on("chat message", function (msg) {
+        var item = document.createElement("li");
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
 
-    let ws;
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
 
-    function showMessage(message) {
-      messages.textContent += `\n\n${message}`;
-      messages.scrollTop = messages.scrollHeight;
-      messageBox.value = "";
-    }
-
-    function init() {
-      if (ws) {
-        ws.onerror = ws.onopen = ws.onclose = null;
-        ws.close();
-      }
-
-      ws = new WebSocket("ws://localhost:6969");
-      ws.onopen = () => {
-        console.log("Connection opened!");
-      };
-      ws.onmessage = ({ data }) => showMessage(data);
-      ws.onclose = function () {
-        ws = null;
-      };
-    }
-
-    sendBtn.onclick = function () {
-      if (!ws) {
-        showMessage("No WebSocket connection :(");
-        return;
-      }
-
-      ws.send(messageBox.value);
-      showMessage(messageBox.value);
-    };
-
-    init();
-  })();
-</script>
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+    </script>
+  </body>
+</html>

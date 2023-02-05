@@ -7,6 +7,11 @@ body {
   overflow: hidden;
 }
 
+h1 {
+  font-size: 70px;
+  display: inline-block;
+}
+
 /*Style the text input fields*/
 input[type="text"] {
   width: 100%;
@@ -34,7 +39,7 @@ button[type="submit"] {
 /*Grid div container with all elements centered*/
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
   justify-items: center;
   align-items: center;
@@ -43,7 +48,8 @@ button[type="submit"] {
 }
 
 .item-center {
-  grid-column: 2;
+  width: 80%;
+  grid-column: 2 / 4;
   border-radius: 20px;
   text-align: center;
   transition: all 0.1s ease-in;

@@ -12,12 +12,14 @@
     <div class="grid-container">
       <div class="top-header">
         <h1 data-value="MoodChat">
-          {{happinessEmoji}}MoodChat{{happinessEmoji}}
+          {{happinessEmoji}} MoodChat {{happinessEmoji}}
         </h1>
       </div>
       <div class="greeting">
         <p>{{greeting}}</p>
-        <button>Join your {{happinessEmoji}} groupchat</button>
+        <form action="/chat/{{happinessEmoji}}" method="post">
+          <button type="submit">Join the {{happinessEmoji}} discussion</button>
+        </form>
       </div>
       <div class="map"></div>
     </div>

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node app.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -11,11 +11,13 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-errors": "~1.6.3",
+    "http-server": "^14.1.1",
     "jade": "^1.9.2",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.20",
     "nunjucks": "^3.2.3",
     "openai": "^3.1.0",
+    "socket.io": "^4.5.4",
     "sqlite3": "^5.1.4",
     "ws": "^8.12.0"
   }
