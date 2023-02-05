@@ -68,7 +68,6 @@ router.post("/", async function (req, res) {
   });
   let completionText = completion.data.choices[0].text;
   let completionTextArray = completionText.split("|");
-  console.log(completionTextArray);
   let emoji = completionTextArray[0].replace(/\s/g, "");
   let emotion = completionTextArray[1].replace(/\s/g, "");
   let happiness = completionTextArray[2].replace(/\s/g, "");
