@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="top-bar">
-      <h1>The {{emoji}} Messaging Room</h1>
+      <h1>The {{ emotion }} Messaging Room</h1>
     </div>
     <ul id="messages"></ul>
     <form id="form">
@@ -20,7 +20,7 @@
       var socket = io();
 
       socket.on("connect", function () {
-        socket.emit("join", "{{emoji}}");
+        socket.emit("join", "{{emotion}}");
       });
 
       socket.on("chat message", function (msg) {
