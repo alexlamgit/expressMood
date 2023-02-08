@@ -7,31 +7,6 @@ var sqlite3 = require("sqlite3").verbose();
 
 const express = require("express");
 const app = express();
-const http = require("http");
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  socket.on("join", (clientInfo) => {
-    console.log(clientInfo);
-    let room = clientInfo["room"];
-    socket.user = clientInfo["user"];
-    socket.join(room);
-  });
-  socket.on("chat message", (msg) => {
-    let room = msg["room"];
-    let message = msg["message"];
-    io.to(room).emit(
-      "chat message",
-      `USER[${socket.id.slice(0, 6)}]:   ${message}`
-    );
-  });
-});
-
-server.listen(3000, () => {
-  console.log("listening on *:3000");
-});
 
 // Routes
 var indexRouter = require("./routes/index");
