@@ -9,16 +9,16 @@
   </head>
 
   <body>
-    <div class="grid-container">
-      <div class="item-center">
-        <h1 data-value="MoodChat">MoodChat</h1>
-        <p>Write a short sentence describing what's on your mind.</p>
-        <form action="/dashboard" method="post">
-          <input type="text" name="moodString" placeholder="" />
-          <button type="submit">Submit</button>
+    <body>
+      <div class="container">
+        <h1 class="title" data-value="MoodChat">MoodChat</h1>
+        <div class="subtitle">What is on your mind?</div>
+        <form class="input-container" action="/dashboard" method="post">
+          <input type="text" name="moodString" />
+          <button type="submit" class="submit-button">✨</button>
         </form>
       </div>
-    </div>
+    </body>
     <script>
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
