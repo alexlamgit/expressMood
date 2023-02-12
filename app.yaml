@@ -1,5 +1,7 @@
 # [START app_yaml]
-runtime: nodejs
+runtime: nodejs19
 env: flex
+automatic_scaling:
+  max_num_instances: 1
 network:
   session_affinity: true

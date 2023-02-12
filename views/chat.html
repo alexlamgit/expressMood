@@ -9,7 +9,7 @@
   </head>
   <body>
     <div class="grid-container">
-      <header id="header" class="header">The {{emotion}} Chat Room</header>
+      <header id="header" class="header">The {{emotion}} Chatroom</header>
       <ul id="messages" class="chats"></ul>
       <form id="form" class="form">
         <input
@@ -37,18 +37,29 @@
       });
 
       socket.on("chat message", function (msg) {
-        var item = document.createElement("li");
-        //Append to class name to allow for styling
-        item.classList.add("chat-bubble");
-
         //Parse the message to a json object
         msg = JSON.parse(msg);
+        var item = document.createElement("li");
+        var stamp = document.createElement("div");
+        //Append to class name to allow for styling
+        item.classList.add("chat-bubble");
+        stamp.classList.add("stamp");
+
+        //Add text to the chat bubble
         item.textContent = msg.message;
+
+        //Add the time stamp to the chat bubble
+        stamp.textContent = `${msg.id} - ${msg.time}`;
+
+        //Append the time stamp to the chat bubble
+        item.appendChild(stamp);
 
         if (msg.id == clientInfo.id) {
           item.classList.add("self");
+          stamp.classList.add("self");
         } else {
           item.classList.add("other");
+          stamp.classList.add("other");
         }
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
