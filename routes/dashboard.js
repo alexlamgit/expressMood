@@ -62,16 +62,19 @@ router.post("/", async function (req, res) {
   // Get the index.jade file from the views folder
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
-    temperature: 0.8,
+    temperature: 0.2,
     max_tokens: 32,
-    prompt: `The answer will contain four elements seperated by a pipe operator. The first elelment will convert the sentence to a unicode emoji. The second element will be the main emtion conveyed in the text. The third element will be a numerical value representing happinness level on a scale of 0 to 100 inclusively. The fourth element will be a customized quote 5 to 10 words long. Sentence: ${data}`,
+    prompt: `The answer will contain five elements seperated by a pipe operator. The first elelment will convert the sentence to a single unicode emoji. The second element will be the main emtion conveyed in the text. The third element will be a numerical value representing happinness level on a scale of 0 to 100 inclusively. The fourth element will be a customized quote 5 to 10 words long. The fifth element will be the hexadecimal colour to represent the specific mood. Sentence: ${data}`,
   });
   let completionText = completion.data.choices[0].text;
   let completionTextArray = completionText.split("|");
   let emoji = completionTextArray[0].replace(/\s/g, "");
   let emotion = completionTextArray[1].replace(/\s/g, "");
+  // Capitalize the first letter of the emotion
+  emotion = emotion.charAt(0).toUpperCase() + emotion.slice(1);
   let happiness = completionTextArray[2].replace(/\s/g, "");
   let quote = completionTextArray[3];
+  let colour = completionTextArray[4].replace(/\s/g, "");
 
   checkStringInDB("database.sqlite", emoji, function (row) {
     if (row != undefined) {
@@ -89,6 +92,7 @@ router.post("/", async function (req, res) {
     emotion: emotion,
     happinessLevel: happiness,
     greeting: quote,
+    bgColour: colour,
   });
 });
 

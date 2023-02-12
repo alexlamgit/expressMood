@@ -5,17 +5,28 @@ const socketapi = {
 
 io.on("connection", (socket) => {
   socket.on("join", (clientInfo) => {
-    console.log(clientInfo);
     let room = clientInfo["room"];
-    socket.user = clientInfo["user"];
     socket.join(room);
   });
+
   socket.on("chat message", (msg) => {
+    let resp = {};
     let room = msg["room"];
     let message = msg["message"];
+    let id = socket.id;
+    //Time that shows the hour, minutes but not seconds
+    let time = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    //Create a json object to send to the client
+    resp["message"] = message;
+    resp["id"] = id;
+    //Send the message to the client
     io.to(room).emit(
       "chat message",
-      `USER[${socket.id.slice(0, 6)}]:   ${message}`
+      JSON.stringify({ message: message, id: id, time: time })
     );
   });
 });

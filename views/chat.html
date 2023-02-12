@@ -8,13 +8,19 @@
     <title>{{emoji}}</title>
   </head>
   <body>
-    <div class="top-bar">
-      <h1>The {{ emotion }} Messaging Room</h1>
+    <div class="grid-container">
+      <header id="header" class="header">The {{emotion}} Chat Room</header>
+      <ul id="messages" class="chats"></ul>
+      <form id="form" class="form">
+        <input
+          type="text"
+          id="input"
+          placeholder="Type your message here"
+          autocomplete="off"
+        />
+        <button type="submit">Send</button>
+      </form>
     </div>
-    <ul id="messages"></ul>
-    <form id="form">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       //Creates a string username composed of a random 6 digit number
@@ -25,16 +31,33 @@
       //Create a clientInfo json object that contains the room and the username
       var clientInfo = {
         room: "{{emotion}}",
-        username: username,
+        id: null,
       };
 
       socket.on("connect", function () {
         socket.emit("join", clientInfo);
+        clientInfo.id = socket.id;
       });
 
       socket.on("chat message", function (msg) {
         var item = document.createElement("li");
-        item.textContent = msg;
+        //Append to class name to allow for styling
+        item.classList.add("chat-bubble");
+
+        //Parse the message to a json object
+        msg = JSON.parse(msg);
+
+        console.log(msg.message);
+        item.textContent = msg.message;
+
+        console.log(msg.id);
+        console.log(clientInfo);
+
+        if (msg.id == clientInfo.id) {
+          item.classList.add("self");
+        } else {
+          item.classList.add("other");
+        }
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
