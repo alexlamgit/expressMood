@@ -23,9 +23,6 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      //Creates a string username composed of a random 6 digit number
-      var username = "User" + Math.floor(Math.random() * 1000000).toString();
-
       var socket = io();
 
       //Create a clientInfo json object that contains the room and the username
@@ -46,12 +43,7 @@
 
         //Parse the message to a json object
         msg = JSON.parse(msg);
-
-        console.log(msg.message);
         item.textContent = msg.message;
-
-        console.log(msg.id);
-        console.log(clientInfo);
 
         if (msg.id == clientInfo.id) {
           item.classList.add("self");

@@ -1,4 +1,5 @@
 var createError = require("http-errors");
+var cookieParser = require("cookie-parser");
 
 var path = require("path");
 var njk = require("nunjucks");
@@ -37,6 +38,7 @@ njk.configure("views", {
   express: app,
 });
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
