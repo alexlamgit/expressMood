@@ -2,7 +2,7 @@
 
 ## Introduction
 
-MoodChat is a web application built using the Node.js Express framework. It is a platform for people to share their moods, thoughts and experiences with others in a chatroom environment without the need for any personal identification. With MoodChat, users can connect with others who may be going through similar experiences and offer support, encouragement, and a listening ear in a completely anonymous manner.
+[MoodChat](http://moodchat.tech) is a web application built using the Node.js Express framework. It is a platform for people to share their moods, thoughts and experiences with others in a chatroom environment without the need for any personal identification. With MoodChat, users can connect with others who may be going through similar experiences and offer support, encouragement, and a listening ear in a completely anonymous manner.
 
 ## Features
 
